@@ -3,6 +3,7 @@ set(TEST_EXECUTABLES ${TEST_EXECUTABLES}
 ${CMAKE_SOURCE_DIR}/test/TestVisualization.cpp
 ${CMAKE_SOURCE_DIR}/test/TestVisualization2.cpp
 ${CMAKE_SOURCE_DIR}/test/ScintPattern.cpp
+${CMAKE_SOURCE_DIR}/test/Timing.cpp
 #${CMAKE_SOURCE_DIR}/test/ShowerDetectionTest.cpp
 
 )
