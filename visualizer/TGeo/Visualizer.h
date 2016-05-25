@@ -37,6 +37,9 @@ private:
   std::vector<std::tuple<TGeoVolume*, TGeoTranslation*> > fVolumes;
   TGeoMaterial *matVacuum; //= new TGeoMaterial("Vacuum", 0,0,0);
   TGeoMedium *Vacuum;// = new TGeoMedium("Vacuum",1, matVacuum);
+  bool fVerbosity;
+  std::list<std::unique_ptr<TPolyMarker3D> > fMarkers;
+  std::list<std::unique_ptr<TPolyLine3D> > fLines;
   
 public:
   Visualizer();
@@ -49,7 +52,30 @@ public:
   void AddVolume( TGeoVolume *rootVolume);
   void AddVolume( TGeoVolume *rootVolume, Vector3D<Precision> p);
   void AddVolume( TGeoShape *shape, Vector3D<Precision> p);
+  void AddVolume( TGeoShape *shape);
   TGeoVolume* CreateTGeoVolume(TGeoShape *shape);
+
+  void AddPoint(Vector3D<Precision> p);
+//  void AddLine(TPolyLine3D const &line) ;
+  void AddLine(Vector3D<Precision> &p0,Vector3D<Precision> &p1);
+
+  template <class ContainerType>
+  void AddPoints(ContainerType const &points, int color) {
+  const int size = points.size();
+  TPolyMarker3D *marker = new TPolyMarker3D(size);
+  marker->SetMarkerColor(color);
+  marker->SetMarkerSize(1);
+  marker->SetMarkerStyle(5);
+  for (int i = 0; i < size; ++i) {
+    //marker->SetNextPoint(points.x(i), points.y(i), points.z(i));
+    marker->SetNextPoint(points[i].x(), points[i].y(), points[i].z());
+  }
+  fMarkers.emplace_back(marker);
+  if (fVerbosity > 0) {
+    std::cout << "Added " << size << " points to Visualizer.\n";
+  }
+}
+
 
 };
 

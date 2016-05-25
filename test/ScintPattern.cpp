@@ -41,9 +41,10 @@ void GenerateTimingHistogram(){
   TCanvas *c2 = new TCanvas("c2", "Timing-Info", 200, 10, 700, 500);
   c2->Divide(1, 2);
   c2->cd(1);
-  Tree t("6701.root", "BSC_DATA_TREE");
-  //int numOfEvents = t.GetNumOfEvents();
-  int numOfEvents = 10000;
+  Tree t("6147.root", "BSC_DATA_TREE");
+  int numOfEvents = t.GetNumOfEvents();
+  std::cout<<"Num of Events : "<< numOfEvents << std::endl;
+  //int numOfEvents = 10000;
   // TH1F *hTrig = new TH1F("hTrig","TEST",100,20000,21000);
   TH2F *h2d = new TH2F("h2d", "Timing", nxbins, xlow, xhigh, nybins, ylow, yhigh);
   h2d->GetXaxis()->SetTitle("Top Scintillator Plane");
@@ -62,14 +63,17 @@ void GenerateTimingHistogram(){
       for (int i = 0; i < scintPlane1.size(); i++) {
       //for (int i = 3; i < 6; i++) {
         ch1=0;
-        ch1 = t.GetEntry(scintPlane1[i]->GetName(), evNo);
-        if (ch1->size()) {
+        //ch1 = t.GetEntry(scintPlane1[i]->GetName(), evNo);
+        //if (ch1->size())
+          {
           for (int j = 0; j < scintPlane2.size(); j++) {
           //for (int j = 3; j < 6; j++) {
             ch2=0;
-            ch2 = t.GetEntry(scintPlane2[j]->GetName(), evNo);
-            if (ch2->size())
-              h2d->Fill(i + 1, j + 1);
+            //ch2 = t.GetEntry(scintPlane2[j]->GetName(), evNo);
+            //if (ch2->size())
+            {
+             // h2d->Fill(i + 1, j + 1);
+             }
           }
         }
       }
