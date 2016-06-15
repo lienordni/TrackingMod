@@ -1,3 +1,6 @@
+/*
+  Author: Vatsal Teraiya
+*/
 #include "Statistics.h"
 
 Statistics::Statistics() {

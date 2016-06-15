@@ -1,4 +1,6 @@
-//#ifndef df
+/*
+Author: Vatsal Teraiya
+*/
 #include <tgmath.h>
 #include "TemplatizedInterface/inc/LinesAngle.h"
 //#define PI 3.14159265359

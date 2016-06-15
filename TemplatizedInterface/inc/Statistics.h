@@ -1,3 +1,8 @@
+/*
+Author: Vatsal Teraiya
+GuideLines: Actually I wrote all the functionality of this class into Properties.h and ScintillatorPlane.h, incase of you want to print all the scintillators data/percentage, then and only then use this class
+*/
+
 #include "Coordinates.h"
 #include <TGeoMatrix.h>
 #include "base/Global.h"

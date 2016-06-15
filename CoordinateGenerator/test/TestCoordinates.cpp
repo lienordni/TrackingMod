@@ -1,3 +1,6 @@
+/*
+Author: Vatsal Teraiya
+*/
 #include <iostream>
 #include "Coordinates.h"
 

@@ -1,3 +1,6 @@
+/*
+ Author: Vatsal Teraiya
+*/
 #include "Tree.h"
 #include "base/Global.h"
 #include <iostream>

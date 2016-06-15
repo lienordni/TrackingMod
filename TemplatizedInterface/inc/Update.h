@@ -13,6 +13,9 @@
 #include "base/Global.h"
 #include "HittedPixel.h"
 #include "TGeoBBox.h"
+/*
+ Author: Vatsal Teraiya
+*/
 #include "visualizer/Eve/Singleton.h"
 #include "VisualizationHelper.h"
 #include "TThread.h"

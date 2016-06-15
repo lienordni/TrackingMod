@@ -1,3 +1,7 @@
+/*
+Author: Vatsal Teraiya
+Guidelines: Finds the angle between two lines. before calling GetAngle()/GetAngleRadian(), make sure that CalculateAngle() is called atleast once.
+*/
 #include <iostream>
 #include "base/Vector3D.h"
 
