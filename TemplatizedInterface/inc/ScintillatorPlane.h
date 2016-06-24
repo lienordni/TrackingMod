@@ -83,8 +83,26 @@ public:
   //template<bool ForRpc>
  // bool IsShowerEvent(Tracking::Tree &t, int evNo);
   static void SetClusterSize(int clSize){fClusterSize = clSize;}
-  void SetFiredStripsVector(int evNo);
-  void SetEfficiency();
+
+ template<bool ForRpc>
+ void SetFiredStripsVector(int evNo) {
+  fScintTotal = 0;
+  int scintVectorSize = fScintVector.size();
+  fFiredStripsVector.clear();
+  fFiredStripsIDVector.clear();
+  fFiredStripsNameVector.clear();
+  for (int i = 0; i < scintVectorSize; i++) {
+        fScintVector[i]->DetectAndSetHit<ForRpc>(evNo);
+    if(fScintVector[i]->GetScintHit()){
+        fFiredStripsVector.push_back(i);
+        fFiredStripsIDVector.push_back(fScintVector[i]->GetScintId());
+        fFiredStripsNameVector.push_back(fScintVector[i]->GetName());
+    }
+
+  }
+}
+  
+void SetEfficiency();
   /*
   void SetEfficiency()
   {

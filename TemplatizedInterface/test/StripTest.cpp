@@ -42,7 +42,7 @@ int main() {
   for (int evNo = 0; evNo < numOfEvents; evNo++) {
     std::cout << "======================================================" << std::endl;
     for (int plNum = 0; plNum < rpc->GetNumOfPlanes(); plNum++) {
-      rpc->GetPlane(plNum)->SetFiredStripsVector(evNo);
+      rpc->GetPlane(plNum)->SetFiredStripsVector<true>(evNo);
       int numOfStripsFired = rpc->GetPlane(plNum)->GetFiredStripsVector().size();
 #define DEBUG_MSG
 #ifdef DEBUG_MSG

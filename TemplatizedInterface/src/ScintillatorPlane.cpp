@@ -32,7 +32,7 @@ void ScintillatorPlane::SetEfficiency(){
 	  int count = 0;
 	  int numOfEvents = Tracking::Tree::instance()->GetNumOfEvents();
 	  for(int i = 0 ; i <  numOfEvents ; i++){
-		  SetFiredStripsVector(i);
+		  SetFiredStripsVector<true>(i);
 		  if(GetFiredStripsVector().size()){
 			  count++;
 		  }
@@ -43,14 +43,14 @@ void ScintillatorPlane::SetEfficiency(){
 
 //void ScintillatorPlane::SetFiredStripsVector(Tracking::Tree &t, int evNo) {
 //Provided the Root file is registered with SetupManager
-void ScintillatorPlane::SetFiredStripsVector(int evNo) {
+/*
+ void ScintillatorPlane::SetFiredStripsVector(int evNo) {
   fScintTotal = 0;
   int scintVectorSize = fScintVector.size();
   fFiredStripsVector.clear();
   fFiredStripsIDVector.clear();
   fFiredStripsNameVector.clear();
   for (int i = 0; i < scintVectorSize; i++) {
-  //  fScintVector[i]->DetectAndSetHit<true>(t, evNo);
 	fScintVector[i]->DetectAndSetHit<true>(evNo);
     if(fScintVector[i]->GetScintHit()){
     	fFiredStripsVector.push_back(i);
@@ -60,5 +60,5 @@ void ScintillatorPlane::SetFiredStripsVector(int evNo) {
 
   }
 }
-
+*/
 } /* namespace Tomography */

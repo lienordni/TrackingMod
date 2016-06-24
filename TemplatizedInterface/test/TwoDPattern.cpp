@@ -25,7 +25,7 @@ void GenerateTimingHistogram() {
   Detector *topPlane = new TriggeringPlane(2, "TopPlane", -150, -1);
   Detector *bottomPlane = new TriggeringPlane(2, "BottomPlane", 150, 7);
   int nxbins = 1000;
-  int xlow = 19500;
+  int xlow = 18000;
   int xhigh = 23000;
   int nybins = 150;
   int ylow = -10;
@@ -37,7 +37,7 @@ void GenerateTimingHistogram() {
   c2->Divide(1, 1);
   c2->cd(1);
   // Tracking::Tree t("6742.root", "BSC_DATA_TREE");
-  Tracking::Tree::instance()->ReadTree("6853.root", "BSC_DATA_TREE", 0);
+  Tracking::Tree::instance()->ReadTree("6928.root", "BSC_DATA_TREE", 0);
   Tracking::Tree *t = Tracking::Tree::instance()->GetTree();
   int numOfEvents = t->GetNumOfEvents();
 
@@ -108,7 +108,8 @@ void GenerateTimingHistogram() {
     		for(int i = 0 ; i < firedNameVector.size() ; i++){
     			ch = t->GetEntry(firedNameVector[i], evNo);
     			if (ch->size()) {
-    				h2d->Fill(ch->at(0), firedIDVector[i]+plNum*32);
+    				h2d->Fill(ch->at(0), firedIDVector[i]);
+    				//h2d->Fill(ch->at(0), firedIDVector[i]+plNum*32);
     			}
     		}
     	}

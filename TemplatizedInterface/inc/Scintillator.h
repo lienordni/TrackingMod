@@ -139,9 +139,9 @@ void Scintillator::DetectAndSetHit(int evNo) {
      * for Scintiallator and Rpc
      */
 
-    if(ForRpc) {
+ 
+   if(ForRpc) {
     	long rpcData = scintillator;
-        //std::cout<< "Rpcdata : " << rpcData << std::endl;
     	if (rpcData >= fStart && rpcData <= fEnd){
     	         fScintHit = true;
  		 fValue = rpcData;
@@ -149,30 +149,15 @@ void Scintillator::DetectAndSetHit(int evNo) {
 
     }else {
     	long scintillatorData = scintillator;
-    	if (scintillatorData >= fStart && scintillatorData <= fEnd){
+        if(scintillatorData)
 	         fScintHit = true;
 		 fValue = scintillatorData;
 	}
     }
 
-/*
-    if (scintillator > 0) {
-      if (ForRpc) {
-        long rpcData = scintillator;
-        if (rpcData >= 19450 && rpcData <= 20550)
-          fScintHit = true;
 
-      } else {
-        if (abs(trig - scintillator) < scintMax)
-          fScintHit = true;
-      }
-    }
-  }
-*/
+}
 
-  // std::cout<<"fScintHit : "<< fScintHit <<std::endl;
-}
-}
 } /* namespace Tomography */
 
 #endif /* PLANE_H_ */

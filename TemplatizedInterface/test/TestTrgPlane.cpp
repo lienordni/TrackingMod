@@ -37,8 +37,8 @@ for(int i = 0 ; i < trgPlaneVect.size() ; i++){
 //setup->SetEventDetected("TRG",1);
 //
 
-Tomography::ScintillatorPlane::SetClusterSize(1);
-for(int evNo= 19 ;evNo <20;  evNo++){
+//Tomography::ScintillatorPlane::SetClusterSize(2);
+for(int evNo= 0 ;evNo <100;  evNo++){
 std::cout<<"--------------------Event No :  " << evNo << " ---------------------------------"<<std::endl;
         setup->SetEventDetected("TRG",evNo);
         std::cout<<"Event Detected : "<< setup->EventDetected() << std::endl;

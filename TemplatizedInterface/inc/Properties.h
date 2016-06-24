@@ -111,8 +111,16 @@ public:
   }
 
   void SetFiredStripsVector(int evNo){
+	 
 	  for(int i=0; i < fNumOfPlanes ; i++){
-		  fScintillatorPlaneVector[i]->SetFiredStripsVector(evNo);
+		// std::cout<<"Dete Type : "<< fDetectorType << std::endl;
+	  	//fScintillatorPlaneVector[i]->SetFiredStripsVector(evNo);
+		  
+		 if(fDetectorType.compare("TRG")==0)
+		  fScintillatorPlaneVector[i]->SetFiredStripsVector<false>(evNo);
+		  else
+		  fScintillatorPlaneVector[i]->SetFiredStripsVector<true>(evNo);
+		 
 	  }
   }
 
