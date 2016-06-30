@@ -1,0 +1,195 @@
+/*
+ * Author(s) : Indroneil Kanungo, Vishal Singh, Gargi Kekre
+ * Date : 28th June 2016
+ * Track Validation
+ *
+ */
+
+#include <iostream>
+#include <TriggeringPlane.h>
+#include <Properties.h>
+#include <SetupManager.h>
+#include <cstring>
+#include "Coordinates.h"
+typedef Tomography::Properties Detector;
+typedef Tracking::Vector3D<double> LienVector;
+using namespace Tomography;
+
+LienVector GetStripCoordinate(double x, double y, double z) {
+  int tmp = 0;
+  LienVector temp;
+  if (z==45)
+ 	 temp.SetX(-50. + x * 3.125 + 1.5625);
+  else
+ 	 temp.SetX(-50. + x * 3.125 + 1.5625);
+  temp.SetY(-50. + y * 3.125 + 1.5625);
+  temp.SetZ(z);
+
+  return temp;
+}
+
+LienVector GetCoordinatesAtZ(std::vector<LienVector> coords, double zz) {
+  double x[2], y[2], z[2];
+  double xx, yy;
+  x[0] = coords[0].x();
+  x[1] = coords[1].x();
+  y[0] = coords[0].y();
+  y[1] = coords[1].y();
+  z[0] = coords[0].z();
+  z[1] = coords[1].z();
+
+  double r = (zz - z[0]) / (z[0] - z[1]);
+  xx = x[0] + r * (x[0] - x[1]);
+  yy = y[0] + r * (y[0] - y[1]);
+  LienVector result(xx, yy, zz);
+  return result;
+}
+
+int GetScintillatorNoFromCoordinate(LienVector v, double error=4)
+{
+        //Coordinates c;
+	double zz=v.z();
+	double xx=(zz==-105)?(v.x()):((v.x()));
+	int low=((xx<0)?(int(xx/18)-1):(int(xx/18)))*18;
+	int high=low+18;
+	if(xx-low<error)
+	{
+            //    std::cout<<xx<<" "<<low<<" "<<high<<"  "<<-100-low/18-4<<std::endl;
+               // return low/18 + 4;
+		return -100-low/18-4;
+	}
+	else if(high-xx<error)
+	{
+          //      std::cout<<xx<<" "<<low<<" "<<high<<"  "<<100+4+low/18<<std::endl;
+               // return low/18 + 4;
+		return 100 + low/18 + 4;
+	}
+	else {
+	//	std::cout<<xx<<" "<<low<<" "<<high<<"  "<<4+low/18<<std::endl;
+		return low/18 + 4;
+}
+
+}
+
+int main(int argc, char *argv[]) {
+/*
+*/
+	double err=0;
+	//if(argc>=3)
+	//	err=(double) atoi(argv[2]);
+//	LienVector tst;
+/*	for(int i=-36;i<=36;i++)
+	{*/
+//		tst.Set(33.75,0.0,-105.0);
+//		std::cout<<GetScintillatorNoFromCoordinate(tst,err)<<std::endl;
+/*
+	}
+	return 0;
+*/  
+std::cout << "Lienordni" << std::endl;
+//  std::string temp_str = std::to_string(atoi(argv[1]));
+  std::string temp_str = "6928";
+  temp_str += ".root";
+  Tracking::Tree::instance()->ReadTree(temp_str.c_str(), "BSC_DATA_TREE", 0);
+  Detector *MT1 = new GlassRpc(2, "MT1", -75, 31);
+  Detector *MT2 = new GlassRpc(4, "MT2", 45, 31);
+  Detector *ScintTop = new TriggeringPlane(2, "ScintTop", 105, -1);
+  Detector *ScintBottom = new TriggeringPlane(2, "ScintBottom", -105, 7);
+  SetupManager *setup = SetupManager::instance();
+  setup->Register(MT2);
+  setup->Register(MT1);
+  setup->Register(ScintTop);
+  setup->Register(ScintBottom);
+  int evNo, i, j, k;
+  std::vector<LienVector> coords(1);
+  double x, y, z;
+  LienVector TopIntersection, BottomIntersection;
+  std::vector<Detector *> DetVect = setup->GetDetectorVector("GLASS");
+  std::vector<Detector *> ScintVect = setup->GetDetectorVector("TRG");
+  ScintillatorPlane::SetClusterSize(1);
+	int dt,db,st,sb;
+  int count = 0, othercount = 0;
+	int match = 0;
+  Coordinates c;
+int l,h;
+/*
+if(argc>=4){
+	l=atoi(argv[3]);
+	h=l+1;
+}
+else{
+	l=0;
+	h=1000;
+}
+*/
+for (evNo = 0; evNo < 1000; ++evNo) {
+    setup->SetEventDetected("TRG", evNo);
+    if (setup->EventDetected()) {
+      count++;
+      setup->SetEventDetected("GLASS", evNo);
+      if (setup->EventDetected()) {
+        othercount++;
+        std::cout << "========== Event no. : " << evNo << " << OtherCount : "<< othercount << "===================" << std::endl;
+
+        for (i = 0; i < DetVect.size(); ++i) {
+          std::vector<ScintillatorPlane *> DetPlaneVector = DetVect[i]->GetScintillatorPlaneVector();
+          x = DetPlaneVector[0]->GetFiredStripsVector()[0];
+          y = DetPlaneVector[1]->GetFiredStripsVector()[0];
+          z = DetVect[i]->GetZPos();
+
+          //coords[i] = GetStripCoordinate(x, y, z);
+          coords[i] = c.GetStripCoordinate(DetVect[i],x, y, z);
+        }
+
+//        TopIntersection = GetCoordinatesAtZ(coords, 105);
+//        BottomIntersection = GetCoordinatesAtZ(coords, -105);
+        c.SetP1(coords[0]);
+        c.SetP2(coords[1]);
+	TopIntersection = c.GetPOI(ScintTop,false);
+        BottomIntersection = c.GetPOI(ScintBottom,true);
+
+        std::cout << "Top Detector Coordinates : " << coords[1].x() << ", " << coords[1].y() << ", " << coords[1].z()
+                  << "\n";
+        std::cout << "Bottom Detector Coordinates : " << coords[0].x() << ", " << coords[0].y() << ", " << coords[0].z()
+                  << "\n";
+      std::cout << "Top Intersection Coordinates : " << TopIntersection.x() << ", " << TopIntersection.y() << ", "
+                  << TopIntersection.z() << "\n";
+        std::cout << "Bottom Intersection Coordinates : " << BottomIntersection.x() << ", " << BottomIntersection.y()
+                  << ", " << BottomIntersection.z() << "\n";
+
+        std::cout << "Top Scintillator Number : " << ScintVect[0]->GetPlane(0)->GetFiredStripsVector()[0] << " " << GetScintillatorNoFromCoordinate(TopIntersection)<<std::endl;
+        std::cout << "Bottom Scintillator Number : " << ScintVect[1]->GetPlane(0)->GetFiredStripsVector()[0] << " " << GetScintillatorNoFromCoordinate(BottomIntersection) << std::endl<<std::endl;
+
+/*	dt=ScintVect[0]->GetPlane(0)->GetFiredStripsVector()[0]-GetScintillatorNoFromCoordinate(TopIntersection,err);
+	st=ScintVect[0]->GetPlane(0)->GetFiredStripsVector()[0]+GetScintillatorNoFromCoordinate(TopIntersection,err);
+        db=ScintVect[1]->GetPlane(0)->GetFiredStripsVector()[0]-GetScintillatorNoFromCoordinate(BottomIntersection,err);
+        sb=ScintVect[1]->GetPlane(0)->GetFiredStripsVector()[0]+GetScintillatorNoFromCoordinate(BottomIntersection,err);
+	if((dt==0 || st==101 || dt==-99 || dt==-100 || st==-100) && (db==0 || sb==101 || db==-99 || db==-100 || sb==-100))
+	{
+		match++;
+		std::cout<<evNo<<" "<<ScintVect[0]->GetPlane(0)->GetFiredStripsVector()[0]<<" "<<GetScintillatorNoFromCoordinate(TopIntersection,err)<<" "<<TopIntersection.x()<<std::endl;
+                std::cout<<evNo<<" "<<ScintVect[1]->GetPlane(0)->GetFiredStripsVector()[0]<<" "<<GetScintillatorNoFromCoordinate(BottomIntersection,err)<<" "<<BottomIntersection.x()<<std::endl;
+
+	}
+*/
+/*
+        std::cout<<"=============================================== PREVIOUS ================================================================" << std::endl;
+        TopIntersection = GetCoordinatesAtZ(coords, 105);
+        BottomIntersection = GetCoordinatesAtZ(coords, -105);
+        std::cout << "Top Intersection Coordinates : " << TopIntersection.x() << ", " << TopIntersection.y() << ", "
+                          << TopIntersection.z() << "\n";
+                std::cout << "Bottom Intersection Coordinates : " << BottomIntersection.x() << ", " << BottomIntersection.y()
+                          << ", " << BottomIntersection.z() << "\n";*/
+      }
+    }
+  }
+
+/* delete MT1;
+ delete MT2;
+ delete ScintTop;
+ delete ScintBottom;
+*/
+ std::cout<<" No. of matches "<<match<<std::endl;
+  std::cout << othercount << std::endl;
+  std::cout << count << std::endl;
+}
